@@ -14,5 +14,5 @@ import javax.jws.WebService;
  */
 @WebService
 public interface HelloWorld {
-    Object[] getProcessVariablesForUserWithEmail(String email) throws TaskQueryServiceException, TaskManagerException;
+    TaskResult[] getProcessVariablesForUserWithEmail(String email) throws Exception, TaskManagerException;
 }
