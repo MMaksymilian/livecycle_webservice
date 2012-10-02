@@ -78,13 +78,13 @@ public class HelloWorldImpl implements HelloWorld {
             tResult.getResults().put("creation", task.getCurrentAssignment().getAssignmentCreateTime().getTime());
             tResult.getResults().put("updated", task.getCurrentAssignment().getAssignmentUpdateTime().getTime());
             tResult.getResults().put("process", task.getProcessName());
-            tResult.getResults().put("instanceId", task.getProcessInstanceId());
+            tResult.getResults().put("instanceId", task.getProcessInstanceId())
 //            resultTab[index] = new String[12];
 //            resultTab[index][0] = "description";
 //            resultTab[index][1] = task.getDescription();
 //            resultTab[index][2] = "deadline";
-//            resultTab[index][3] = new XmlCalendar(task.getDeadline());
 //            resultTab[index][4] = "creation";
+//            resultTab[index][3] = new XmlCalendar(task.getDeadline());
 //            resultTab[index][5] = task.getCurrentAssignment().getAssignmentCreateTime().getTime();
 //            resultTab[index][6] = "updated";
 //            resultTab[index][7] = task.getCurrentAssignment().getAssignmentUpdateTime().getTime();
