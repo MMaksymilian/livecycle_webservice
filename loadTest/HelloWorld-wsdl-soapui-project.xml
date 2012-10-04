@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="HelloWorld?wsdl" soapui-version="4.5.1" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="HelloWorldImplServiceSoapBinding" type="wsdl" bindingName="{http://impl.service.cxf.webservice.max.com/}HelloWorldImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://user-komputer:8081/websertice-cxf/services/HelloWorld?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://user-komputer:8081/websertice-cxf/services/HelloWorld?wsdl"><con:part><con:url>http://user-komputer:8081/websertice-cxf/services/HelloWorld?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="HelloWorldImplService" targetNamespace="http://impl.service.cxf.webservice.max.com/" xmlns:ns1="http://service.cxf.webservice.max.com/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.service.cxf.webservice.max.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:import location="http://user-komputer:8081/websertice-cxf/services/HelloWorld?wsdl=HelloWorld.wsdl" namespace="http://service.cxf.webservice.max.com/"></wsdl:import>
+  <wsdl:binding name="HelloWorldImplServiceSoapBinding" type="ns1:HelloWorld">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getTaskDataForUserWithEmail">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTaskDataForUserWithEmail">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTaskDataForUserWithEmailResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="TaskManagerException">
+        <soap:fault name="TaskManagerException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HelloWorldImplService">
+    <wsdl:port binding="tns:HelloWorldImplServiceSoapBinding" name="HelloWorldImplPort">
+      <soap:address location="http://user-komputer:8081/websertice-cxf/services/HelloWorld"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://user-komputer:8081/websertice-cxf/services/HelloWorld?wsdl=HelloWorld.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="HelloWorld" targetNamespace="http://service.cxf.webservice.max.com/" xmlns:ns1="http://service.cxf.webservice.max.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://service.cxf.webservice.max.com/" xmlns:tns="http://service.cxf.webservice.max.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="getTaskDataForUserWithEmail" type="tns:getTaskDataForUserWithEmail"/>
+      <xs:element name="getTaskDataForUserWithEmailResponse" type="tns:getTaskDataForUserWithEmailResponse"/>
+      <xs:element name="taskResult" type="tns:taskResult"/>
+      <xs:complexType name="getTaskDataForUserWithEmail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getTaskDataForUserWithEmailResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:taskResult"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="taskResult">
+        <xs:sequence>
+          <xs:element name="resultEntities">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element minOccurs="0" name="key" type="xs:string"/>
+                      <xs:element minOccurs="0" name="value" type="xs:anyType"/>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="linkedHashMap">
+        <xs:complexContent>
+          <xs:extension base="tns:hashMap">
+            <xs:sequence/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="hashMap">
+        <xs:complexContent>
+          <xs:extension base="tns:abstractMap">
+            <xs:sequence/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="abstractMap">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:element name="TaskManagerException" type="tns:TaskManagerException"/>
+      <xs:complexType name="TaskManagerException">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:element name="Exception" type="tns:Exception"/>
+      <xs:complexType name="Exception">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="message" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Exception">
+    <wsdl:part element="ns1:Exception" name="Exception"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTaskDataForUserWithEmail">
+    <wsdl:part element="ns1:getTaskDataForUserWithEmail" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="TaskManagerException">
+    <wsdl:part element="ns1:TaskManagerException" name="TaskManagerException"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTaskDataForUserWithEmailResponse">
+    <wsdl:part element="ns1:getTaskDataForUserWithEmailResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="HelloWorld">
+    <wsdl:operation name="getTaskDataForUserWithEmail">
+      <wsdl:input message="ns1:getTaskDataForUserWithEmail" name="getTaskDataForUserWithEmail"></wsdl:input>
+      <wsdl:output message="ns1:getTaskDataForUserWithEmailResponse" name="getTaskDataForUserWithEmailResponse"></wsdl:output>
+      <wsdl:fault message="ns1:Exception" name="Exception"></wsdl:fault>
+      <wsdl:fault message="ns1:TaskManagerException" name="TaskManagerException"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://user-komputer:8081/websertice-cxf/services/HelloWorld</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getTaskDataForUserWithEmail" bindingOperationName="getTaskDataForUserWithEmail" type="Request-Response" outputName="getTaskDataForUserWithEmailResponse" inputName="getTaskDataForUserWithEmail" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://user-komputer:8081/websertice-cxf/services/HelloWorld</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.cxf.webservice.max.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:getTaskDataForUserWithEmail>
+         <arg0>apink@globalcorp.com</arg0>
+         <!--<arg0>jjacobs@sampleorganization.com</arg0>-->
+      </ser:getTaskDataForUserWithEmail>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://impl.service.cxf.webservice.max.com/HelloWorld/getTaskDataForUserWithEmail"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite name="TestSuite 1"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 1" searchProperties="true"><con:settings/><con:testStep type="request" name="getTaskDataForUserWithEmail - Request 1"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>HelloWorldImplServiceSoapBinding</con:interface><con:operation>getTaskDataForUserWithEmail</con:operation><con:request name="getTaskDataForUserWithEmail - Request 1" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://user-komputer:8081/websertice-cxf/services/HelloWorld</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.cxf.webservice.max.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:getTaskDataForUserWithEmail>
+         <!--Optional:-->
+         <arg0>apink@globalcorp.com</arg0>
+      </ser:getTaskDataForUserWithEmail>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://impl.service.cxf.webservice.max.com/HelloWorld/getTaskDataForUserWithEmail"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:loadTest name="LoadTest 1"><con:settings/><con:threadCount>15</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type><con:config><testDelay>100</testDelay><randomFactor>0.5</randomFactor></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/></con:soapui-project>

@@ -7,6 +7,8 @@ import com.adobe.idp.taskmanager.dsc.client.TaskManagerQueryService;
 import com.adobe.idp.taskmanager.dsc.client.query.*;
 import com.adobe.idp.taskmanager.dsc.client.task.TaskManager;
 import com.adobe.idp.taskmanager.dsc.client.task.TaskManagerException;
+import com.adobe.idp.um.api.DirectoryManager;
+import com.adobe.livecycle.usermanager.client.DirectoryManagerServiceClient;
 import com.max.webservice.cxf.service.HelloWorld;
 import com.max.webservice.cxf.service.TaskResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,10 +34,13 @@ public class HelloWorldImpl implements HelloWorld {
     Properties connectionProps;
 
     @Override
-    public TaskResult[] getProcessVariablesForUserWithEmail(final String email) throws Exception, TaskManagerException {
+    public TaskResult[] getTaskDataForUserWithEmail(final String email) throws Exception, TaskManagerException {
         ServiceClientFactory myFactory = ServiceClientFactory.createInstance(connectionProps);
         TaskManagerQueryService queryManager = TaskManagerClientFactory.getQueryManager(myFactory);
-        TaskManager myTaskManager = TaskManagerClientFactory.getTaskManager(myFactory);
+//        ServiceClientFactory scf = ServiceClientFactory.createInstance(connectionProps);
+//        DirectoryManager dirManager = new
+//                DirectoryManagerServiceClient(scf);
+//        dirManager.findPrincipal("String");
 
         //WYSZUKIWANIE UŻYTKOWNIKÓW
         UserSearchFilter userSearchFilter = new UserSearchFilter();
@@ -55,43 +60,37 @@ public class HelloWorldImpl implements HelloWorld {
             throw new Exception("No such user with email: " + email);
         }
 
+        myFactory = ServiceClientFactory.createInstance(connectionProps);
+        connectionProps.setProperty("DSC_CREDENTIAL_USERNAME", tmUser.getLoginId());
+        queryManager = TaskManagerClientFactory.getQueryManager(myFactory);
+//      myTaskManager = TaskManagerClientFactory.getTaskManager(myFactory);
         TaskSearchFilter filt = new TaskSearchFilter();
-        filt.addCondition(TaskSearchingConstants.pASSIGNMENT_QUEUE_OWNER, Operator.EQUALS, tmUser.getLoginId());
-//        filt.addCondition(TaskSearchingConstants.pPROCESS_INSTANCE_ID, Operator.EQUALS,new Long(processInstance.getProcessInstanceId()));
+//        filt.addCondition(TaskSearchingConstants.pPRINCIPAL_DISPLAYNAME, Operator.EQUALS, tmUser.getDisplayName());
         List<TaskRow> userTasks = queryManager.taskSearch(filt);
-        CollectionUtils.filter(userTasks, new Predicate() {
-            @Override
-            public boolean evaluate(Object o) {
-                return ((TaskRow) o).getTaskStatus() == StatusFilter.completed;
-            }
-        });
+        /*filtrowanie kolekcji - ewentualnie do dodania*/
+//        CollectionUtils.filter(userTasks, new Predicate() {
+//            @Override
+//            public boolean evaluate(Object o) {
+//                return ((TaskRow) o).getTaskStatus() == StatusFilter.completed;
+//            }
+//        });
         Collections.sort(userTasks, new TaskComparator());
         TaskResult[] resultTab = new TaskResult[userTasks.size()];
         int index = 0;
         for (TaskRow task : userTasks) {
-            /*Działa tylko dla obecnie zalogowanego użytkownika, tzn tego z properties'ów - głupie nie?*/
+            /*Działa tylko dla obecnie zalogowanego użytkownika, tzn. tego z properties'ów - głupie nie?*/
 //            List variables = queryManager.getProcessVariableValues(new Long(task.getTaskId() + 1));
             TaskResult tResult = new TaskResult();
             resultTab[index] = tResult;
             tResult.getResults().put("description", task.getDescription());
-//            tResult.getResults().put("deadline", task.getDeadline());
+            if (task.getDeadline() != null) {
+                tResult.getResults().put("deadline", task.getDeadline());
+            }
+            tResult.getResults().put("id", task.getTaskId());
             tResult.getResults().put("creation", task.getCurrentAssignment().getAssignmentCreateTime().getTime());
             tResult.getResults().put("updated", task.getCurrentAssignment().getAssignmentUpdateTime().getTime());
             tResult.getResults().put("process", task.getProcessName());
             tResult.getResults().put("instanceId", task.getProcessInstanceId());
-//            resultTab[index] = new String[12];
-//            resultTab[index][0] = "description";
-//            resultTab[index][1] = task.getDescription();
-//            resultTab[index][2] = "deadline";
-//            resultTab[index][4] = "creation";
-//            resultTab[index][3] = new XmlCalendar(task.getDeadline());
-//            resultTab[index][5] = task.getCurrentAssignment().getAssignmentCreateTime().getTime();
-//            resultTab[index][6] = "updated";
-//            resultTab[index][7] = task.getCurrentAssignment().getAssignmentUpdateTime().getTime();
-//            resultTab[index][8] = "process";
-//            resultTab[index][9] = task.getProcessName();
-//            resultTab[index][10] = "instanceId";
-//            resultTab[index][11] = task.getProcessInstanceId();
             index++;
         }
         return resultTab;
