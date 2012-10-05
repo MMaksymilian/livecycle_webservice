@@ -11,6 +11,7 @@ import com.adobe.idp.um.api.DirectoryManager;
 import com.adobe.livecycle.usermanager.client.DirectoryManagerServiceClient;
 import com.max.webservice.cxf.service.HelloWorld;
 import com.max.webservice.cxf.service.TaskResult;
+import com.max.webservice.cxf.service.VariablesResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class HelloWorldImpl implements HelloWorld {
         int index = 0;
         for (TaskRow task : userTasks) {
             /*Działa tylko dla obecnie zalogowanego użytkownika, tzn. tego z properties'ów - głupie nie?*/
-//            List variables = queryManager.getProcessVariableValues(new Long(task.getTaskId() + 1));
+            List variablesValues = queryManager.getProcessVariableValues(new Long(task.getTaskId()));
             TaskResult tResult = new TaskResult();
             resultTab[index] = tResult;
             tResult.getResults().put("description", task.getDescription());
@@ -91,6 +92,41 @@ public class HelloWorldImpl implements HelloWorld {
             tResult.getResults().put("updated", task.getCurrentAssignment().getAssignmentUpdateTime().getTime());
             tResult.getResults().put("process", task.getProcessName());
             tResult.getResults().put("instanceId", task.getProcessInstanceId());
+            index++;
+        }
+        return resultTab;
+    }
+
+    @Override
+    public VariablesResult[] getProcessVariablesForUser(String login, String password) throws Exception {
+        ServiceClientFactory myFactory = ServiceClientFactory.createInstance(connectionProps);
+        TaskManagerQueryService queryManager = TaskManagerClientFactory.getQueryManager(myFactory);
+        connectionProps.setProperty("DSC_CREDENTIAL_USERNAME", login);
+        connectionProps.setProperty("DSC_CREDENTIAL_PASSWORD", password);
+
+        TaskSearchFilter filt = new TaskSearchFilter();
+        List<TaskRow> userTasks = queryManager.taskSearch(filt);
+        /*filtrowanie kolekcji - ewentualnie do dodania*/
+//        CollectionUtils.filter(userTasks, new Predicate() {
+//            @Override
+//            public boolean evaluate(Object o) {
+//                return ((TaskRow) o).getTaskStatus() == StatusFilter.completed;
+//            }
+//        });
+        Collections.sort(userTasks, new TaskComparator());
+        VariablesResult[] resultTab = new VariablesResult[userTasks.size()];
+        int index = 0;
+        for (TaskRow task : userTasks) {
+            /*Działa tylko dla obecnie zalogowanego użytkownika, tzn. tego z properties'ów - głupie nie?*/
+            List<MultiTypeVariable> variablesValues = queryManager.getProcessVariableValues(new Long(task.getTaskId()));
+            VariablesResult variablesResult = new VariablesResult();
+            variablesResult.setTaskId(task.getTaskId() + "");
+            LinkedHashMap<String, String> processVariablesMap = new LinkedHashMap<String, String>();
+            for(MultiTypeVariable multiTypeVariable: variablesValues) {
+                processVariablesMap.put(multiTypeVariable.getName().toString(), multiTypeVariable.getValue() == null ? "null" : multiTypeVariable.getValue().toString());
+            }
+            variablesResult.setProcessVariables(processVariablesMap);
+            resultTab[index] = variablesResult;
             index++;
         }
         return resultTab;
