@@ -1,6 +1,8 @@
 package com.max.webservice.cxf.service.impl;
 
+import com.adobe.idp.dsc.clientsdk.ServiceClient;
 import com.adobe.idp.dsc.clientsdk.ServiceClientFactory;
+import com.adobe.idp.dsc.clientsdk.ServiceClientFactoryProperties;
 import com.adobe.idp.dsc.filter.Operator;
 import com.adobe.idp.taskmanager.dsc.client.TaskManagerClientFactory;
 import com.adobe.idp.taskmanager.dsc.client.TaskManagerQueryService;
@@ -60,7 +62,6 @@ public class HelloWorldImpl implements HelloWorld {
         if (tmUser == null) {
             throw new Exception("No such user with email: " + email);
         }
-
         myFactory = ServiceClientFactory.createInstance(connectionProps);
         connectionProps.setProperty("DSC_CREDENTIAL_USERNAME", tmUser.getLoginId());
         queryManager = TaskManagerClientFactory.getQueryManager(myFactory);
@@ -103,7 +104,6 @@ public class HelloWorldImpl implements HelloWorld {
         TaskManagerQueryService queryManager = TaskManagerClientFactory.getQueryManager(myFactory);
         connectionProps.setProperty("DSC_CREDENTIAL_USERNAME", login);
         connectionProps.setProperty("DSC_CREDENTIAL_PASSWORD", password);
-
         TaskSearchFilter filt = new TaskSearchFilter();
         List<TaskRow> userTasks = queryManager.taskSearch(filt);
         /*filtrowanie kolekcji - ewentualnie do dodania*/
