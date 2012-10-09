@@ -1,0 +1,1 @@
+Dzia³a kiedy biblioteki, które tu s¹, s¹ te¿ w serwerze aplikacyjnym. Jeœli nie ma czêœci to wtedy bêdzie wyj¹tek, który nic nie mówi (IllegalState).
