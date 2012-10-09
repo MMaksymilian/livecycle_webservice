@@ -10,8 +10,12 @@ import com.adobe.idp.taskmanager.dsc.client.query.*;
 import com.adobe.idp.taskmanager.dsc.client.task.TaskManager;
 import com.adobe.idp.taskmanager.dsc.client.task.TaskManagerException;
 import com.adobe.idp.um.api.DirectoryManager;
+import com.adobe.idp.um.api.UMException;
+import com.adobe.idp.um.api.infomodel.User;
+import com.adobe.idp.um.api.infomodel.impl.UserImpl;
 import com.adobe.livecycle.usermanager.client.DirectoryManagerServiceClient;
 import com.max.webservice.cxf.service.HelloWorld;
+import com.max.webservice.cxf.service.InsertUsersResult;
 import com.max.webservice.cxf.service.TaskResult;
 import com.max.webservice.cxf.service.VariablesResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +36,32 @@ import java.util.*;
 @WebService(endpointInterface = "com.max.webservice.cxf.service.HelloWorld")
 public class HelloWorldImpl implements HelloWorld {
 
+    @Override
+    public InsertUsersResult insertUsers(int number, String root) throws UMException {
+        InsertUsersResult result = new InsertUsersResult();
+                ServiceClientFactory scf = ServiceClientFactory.createInstance(connectionProps);
+        DirectoryManager dirManager = new
+                DirectoryManagerServiceClient(scf);
+
+        String[] names = {"Paweł", "Olga", "Michał", "Maria", "Katarzyna", "Zuzanna", "Łukasz", "Piotr", "Anna"};
+        String[] surnames = {"Bończyk", "Kowalczyk", "Bralczyk", "Drozd", "Stoch", "Stach"};
+        Random generator = new Random();
+        for(int index = 1 ; index <= number; index++) {
+            UserImpl testUser = new UserImpl();
+            String userId = root + index;
+            testUser.setEmail(userId + "@sampleorganization.com");
+            testUser.setUserid(userId);
+            testUser.setDomainName("DefaultDom");
+            testUser.setPrincipalType("USER");
+            testUser.setGivenName(names[generator.nextInt(names.length)]);
+            testUser.setFamilyName(surnames[generator.nextInt(surnames.length)]);
+            testUser.setCanonicalName(userId);
+            dirManager.createLocalUser(testUser, "password");
+            result.getResults().add(testUser);
+        }
+        return result;
+    }
+
     @Autowired
     @Qualifier("connectionProperties")
     Properties connectionProps;
@@ -40,11 +70,6 @@ public class HelloWorldImpl implements HelloWorld {
     public TaskResult[] getTaskDataForUserWithEmail(final String email) throws Exception, TaskManagerException {
         ServiceClientFactory myFactory = ServiceClientFactory.createInstance(connectionProps);
         TaskManagerQueryService queryManager = TaskManagerClientFactory.getQueryManager(myFactory);
-//        ServiceClientFactory scf = ServiceClientFactory.createInstance(connectionProps);
-//        DirectoryManager dirManager = new
-//                DirectoryManagerServiceClient(scf);
-//        dirManager.findPrincipal("String");
-
         //WYSZUKIWANIE UŻYTKOWNIKÓW
         UserSearchFilter userSearchFilter = new UserSearchFilter();
         List<TMUser> users = queryManager.userSearch(userSearchFilter);

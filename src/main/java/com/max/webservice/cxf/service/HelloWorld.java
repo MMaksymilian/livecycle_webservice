@@ -2,6 +2,7 @@ package com.max.webservice.cxf.service;
 
 import com.adobe.idp.taskmanager.dsc.client.query.TaskQueryServiceException;
 import com.adobe.idp.taskmanager.dsc.client.task.TaskManagerException;
+import com.adobe.idp.um.api.UMException;
 
 import javax.jws.WebService;
 
@@ -17,4 +18,6 @@ public interface HelloWorld {
     TaskResult[] getTaskDataForUserWithEmail(String email) throws Exception;
 
     VariablesResult[] getProcessVariablesForUser(String login, String password) throws Exception;
+
+    InsertUsersResult insertUsers(int number, String root) throws UMException;
 }
